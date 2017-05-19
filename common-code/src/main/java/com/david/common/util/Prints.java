@@ -13,4 +13,12 @@ public class Prints {
     public static void println(String str) {
         System.out.println(str);
     }
+
+    public static void printErr(String str) {
+        System.err.print(str);
+    }
+
+    public static void printlnErr(String str) {
+        System.err.print(str);
+    }
 }
