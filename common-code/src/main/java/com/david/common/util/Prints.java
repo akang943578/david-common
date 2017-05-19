@@ -21,4 +21,8 @@ public class Prints {
     public static void printlnErr(String str) {
         System.err.println(str);
     }
+
+    public static void test() {
+        System.out.println("test");
+    }
 }
