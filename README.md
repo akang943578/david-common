@@ -5,7 +5,7 @@
 #### 更改公共类：
 代码写好后，将其deploy到maven-repo项目里面。maven-repo项目push更新到github，项目重新依赖即可。
 ```
-mvn deploy -DaltDeploymentRepository=jiakang-mvn-repo::default::file:/Users/jiakang/IdeaProjects/maven-repo/repository/ -Dmaven.test.skip=true
+mvn clean deploy -DaltDeploymentRepository=jiakang-mvn-repo::default::file:/Users/jiakang/IdeaProjects/maven-repo/repository/ -Dmaven.test.skip=true
 ```
 #### 初次创建项目：
 简单来说，共有3步：
@@ -16,7 +16,7 @@ mvn deploy -DaltDeploymentRepository=jiakang-mvn-repo::default::file:/Users/jiak
 ```
 ##### 将其deploy到一个新项目目录下：
 ```
-mvn deploy -DaltDeploymentRepository=jiakang-mvn-repo::default::file:/Users/jiakang/IdeaProjects/maven-repo/repository/ -Dmaven.test.skip=true
+mvn clean deploy -DaltDeploymentRepository=jiakang-mvn-repo::default::file:/Users/jiakang/IdeaProjects/maven-repo/repository/ -Dmaven.test.skip=true
 ```
 ##### 把本地仓库提交到github上
 上面把项目deploy到本地目录/Users/jiakang/IdeaProjects/maven-repo/repository/里，下面把这个目录提交到github上。
