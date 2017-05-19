@@ -2,7 +2,7 @@
 这是我的公共类库。公共类会提交到这里，供其他项目依赖。
 
 ### 使用方法：
-#### 更改公共类：
+#### 更新项目：
 代码写好后，将其deploy到maven-repo项目里面。maven-repo项目push更新到github，项目重新依赖即可。
 ```
 mvn clean deploy -DaltDeploymentRepository=jiakang-mvn-repo::default::file:/Users/jiakang/IdeaProjects/maven-repo/repository/ -Dmaven.test.skip=true
