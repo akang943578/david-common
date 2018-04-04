@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" name="msg-center">
+
+    <Properties>
+        <Property name="log-path">./src/test/logs</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="console-log" target="SYSTEM_OUT">
+            <!--<ThresholdFilter level="off" onMatch="ACCEPT" onMismatch="DENY"/>-->
+            <PatternLayout pattern="%d %p [%t] %C{2} (%F:%L) - %m %X{request_id}%n"/>
+        </Console>
+        <RollingFile name="debug-log" fileName="${log-path}/debug.log"
+                     filePattern="${log-path}/debug.log.%d{yyyyMMdd-HH}">
+            <PatternLayout>
+                <Pattern>[%level] %d{yyyyMMdd HH:mm:ss.SSS} [%t] %c{1} - %msg %n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingFile>
+
+        <RollingRandomAccessFile name="profile-log" fileName="${log-path}/profile.log"
+                                 filePattern="${log-path}/profile.log.%d{yyyyMMdd-HH}">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingRandomAccessFile>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="com.david.common" level="info" additivity="false">
+            <appender-ref ref="debug-log" level="info"/>
+            <appender-ref ref="console-log" level="info"/>
+        </Logger>
+        <Logger name="profile" level="info" additivity="false">
+            <appender-ref ref="profile-log" level="info"/>
+        </Logger>
+        <Root level="warn" additivity="false">
+            <!--<AppenderRef ref="debug-log"/>-->
+        </Root>
+    </Loggers>
+</Configuration>

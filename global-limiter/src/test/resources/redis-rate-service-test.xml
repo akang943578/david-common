@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean id="redisRateService" class="com.david.common.globalLimiter.impl.RedisRateServiceImpl">
+        <!-- 限速基于redis，需要配置一个redis端口 -->
+        <constructor-arg name="jedisAddress" value="${jedisAddress}"/>
+        <!-- 配置限速使用的redis key，注意要在redis端口中保证唯一，否则相互影响 -->
+        <constructor-arg name="rateLimitKey" value="${rateLimitKey}"/>
+        <!-- 服务部署的节点数量，用于在redis资源有问题时使用 -->
+        <constructor-arg name="defaultMcSize" value="${defaultMcSize}"/>
+        <!-- qps限速值，每秒许可的最大值，最好设置为 (1000/${monitorPeriodInMillis}) 的倍数，避免出现精度问题导致限速不准确 -->
+        <constructor-arg name="maxPermits" value="${maxPermits}"/>
+        <!-- 后台线程从redis端口申请许可间隔，默认为50，一般无需更改此值 -->
+        <!--<constructor-arg name="monitorPeriodInMillis" value="${monitorPeriodInMillis}"/>-->
+    </bean>
+
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>service.properties</value>
+            </list>
+        </property>
+    </bean>
+
+</beans>
