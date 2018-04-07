@@ -1,0 +1,120 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+### pool based multi login tool for both normal and aliyun machines
+# @Time    : 2018/3/2 10:11
+# @Author  : jiakang
+# @File    : potl
+# @Software: IntelliJ IDEA
+
+import potl_raw, nortl_raw, alitl_raw, potl_raw2
+import sys
+import re
+
+
+def usage(prompt=''):
+    if prompt:
+        print(prompt)
+
+    usage = '''Usage:     
+    执行如下命令进入机器
+        交互式：
+            1. wtool potl message_flow_proc #以池子为单位批量进入此池子下的机器
+            2. wtool potl -h 10.85.18.188 #指定进入单台机器
+            3. wtool potl -h 10.77.6.220,10.85.18.189,10.85.18.190 #指定进入某几台机器
+            
+            进入到交互输入框(出现multiple-ssh> )时，可执行如下命令：
+                show ips #查看当前连接的ips
+                exit #退出脚本
+                any other commands #在登录的机器上批量执行命令
+                
+        非交互式：
+            1. wtool potl message_flow_proc -c "pwd" #以池子为单位批量进入此池子下的机器执行指定命令
+            2. wtool potl -h 10.77.6.220 -c "pwd" #指定进入单台机器执行指定命令
+            3. wtool potl -h 10.85.18.188,10.85.18.189,10.77.6.220 -c "pwd" #指定进入某几台机器执行指定命令
+    
+    可选参数
+        -a #只操作阿里云机器
+        -n #只操作内网机器
+        两者最多存在其一。两者都没有时，操作全部机器'''
+
+    print(usage)
+    exit(0)
+
+
+def check_param():
+    pool_name = ''
+    ips = ''
+    command = ''
+    machine_type = 'both'
+
+    args = sys.argv
+    index = 1
+    while index < len(args):
+        try:
+            curr_arg = args[index]
+            # print(curr_arg)
+            if curr_arg == '-h':
+                index += 1
+                ips = args[index]
+                if not is_illegal_ips(ips):
+                    usage('ips not illegal, please input right ips, split by comma')
+            elif curr_arg == '-c':
+                index += 1
+                command = args[index]
+            elif curr_arg == '-n':
+                if machine_type == 'both':
+                    machine_type = 'normal'
+                else:
+                    usage('machine_type can not be redefined')
+            elif curr_arg == '-a':
+                if machine_type == 'both':
+                    machine_type = 'aliyun'
+                else:
+                    usage('machine_type can not be redefined')
+            else:
+                pool_name = pool_name + ' ' + curr_arg
+            index += 1
+            continue
+        except Exception as e:
+            usage('input error arguments')
+
+    pool_name = pool_name.strip()
+    if ips != '' and pool_name != '':
+        usage('-h ips and pool_name can not exist at the same time')
+
+    if ips == '' and pool_name == '':
+        usage('-h ips and pool_name must exist one')
+
+    pool_name_and_params = pool_name.split(' ')
+    if len(pool_name_and_params) > 1:
+        usage('too many pools: %s' % pool_name_and_params)
+
+    return pool_name, ips, command, machine_type
+
+
+def is_illegal_ips(ips):
+    regex = r'^((\d{1,3}\.){3}\d{1,3},)*(\d{1,3}\.){3}\d{1,3}$'
+    return re.match(regex, ips)
+
+
+def execute():
+    pool_name, ips, command, machine_type = check_param()
+    # print('pool_name: %s, ips: %s, command: %s, machine_type: %s' % (pool_name, ips, command, machine_type))
+    tool = None
+    if machine_type == 'both':
+        # tool = potl_raw.PoolTool()
+        tool = potl_raw2.PoolTool()
+    elif machine_type == 'normal':
+        tool = nortl_raw.NormalTool()
+    elif machine_type == 'aliyun':
+        tool = alitl_raw.AliTool()
+    else:
+        usage('machine_type is undefined: %s' % machine_type)
+    tool.execute(pool_name, ips, command, machine_type)
+
+
+if __name__ == '__main__':
+    try:
+        execute()
+    except Exception as e:
+        pass

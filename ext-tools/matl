@@ -1,0 +1,174 @@
+#!/bin/bash
+### materials config manage tool
+
+final_last_update=0
+passCheck=1
+err_domains=''
+pre_domain=''
+pre_date_str=''
+
+function usage(){
+
+    echo "Usage:
+    1. wtool matl show -t #查看所有机器物料配置最后更新的时间戳
+    2. wtool matl show -d #查看所有机器物料配置最后更新的详情
+    3. wtool matl refresh -t #更新所有机器的物料配置，并显示此次更新的配置时间戳
+    4. wtool matl refresh -d #更新所有机器的物料配置，并显示此次更新的配置详情
+    5. wtool matl show -t 10.77.6.220:8090 #查看单台机器物料配置最后更新的时间戳
+    6. wtool matl refresh -d 10.75.2.158:8080 #查看单台机器物料配置最后更新的详情"
+    exit 0
+}
+
+function do_check_one(){
+    host=$1
+    port=$2
+    method=$3
+    show_level=$4
+
+    domain=${host}":"${port}
+    result=$(curl -s --connect-timeout 1 ${domain}"/materials/"${method}".json")
+
+    last_update=0
+    has_size=$(echo ${result} | jq 'has("size")')
+#   echo ${has_size}
+    if [[ ${has_size} = 'true' ]]; then
+        size=$(echo ${result} | jq '.size')
+        if [[ size -gt 0 ]]; then
+            for index in $(seq 1 ${size})
+            do
+                real_index=$(expr ${index} - 1)
+        #        echo ${real_index}
+                current_last_update=$(echo ${result} | jq '.details['${real_index}'].updateTime')
+                if [[ ${current_last_update} -gt ${last_update} ]]; then
+                    last_update=${current_last_update}
+                fi
+#                echo ${last_update}
+            done
+        fi
+    fi
+
+    last_update_in_sec=$(expr ${last_update} / 1000)
+    date_str=$(date -r ${last_update_in_sec} +%Y-%m-%dT%H:%M:%S)
+
+    if [[ ${final_last_update} = 0 ]]; then
+        final_last_update=${last_update}
+    elif [[ ${final_last_update} -lt ${last_update} ]]; then
+        final_last_update=${last_update}
+        passCheck=0
+        err_domains=${err_domains}""${pre_domain}"    "${pre_date_str}"\n"
+    elif [[ ${final_last_update} -gt ${last_update} ]]; then
+        passCheck=0
+        err_domains=${err_domains}""${domain}"    "${date_str}"\n"
+    fi
+
+    if [[ ${show_level} = '-t' ]]; then
+        echo ${domain}"   "${date_str}
+    elif [[ ${show_level} = '-d' ]]; then
+        echo ${domain}":"
+        echo ${result} | jq .
+    else
+        usage
+    fi
+
+    pre_domain=${domain}
+    pre_date_str=${date_str}
+}
+
+function do_check(){
+    current_pool_name=$1
+    raw_host_ips_str=$2
+    port=$3
+    method=$4
+    show_level=$5
+
+    echo ${current_pool_name}":"
+    host_ips=(${raw_host_ips_str//,/ })
+    for host in ${host_ips[@]};
+    do
+        do_check_one ${host} ${port} ${method} ${show_level}
+    done
+    echo ""
+}
+
+function do_check_pool(){
+    pool_name=$1
+    port=$2
+    method=$3
+    show_level=$4
+
+    raw_pool_result_str=$(wtool jpool -p ${pool_name})
+    deal_pool_result_str=$(echo ${raw_pool_result_str//-/_})
+    pool_key_arr=$(echo ${deal_pool_result_str} | jq 'keys')
+#    echo ${pool_key_arr}
+
+    for pool_key in ${pool_key_arr}
+    do
+    #    echo ${pool_key}
+        if [[ ${pool_key} != '[' && ${pool_key} != ']' ]]; then
+            one_deal=${pool_key#*\"}
+            final_pool_key=${one_deal%\"*}
+    #        echo ${final_pool_key}
+
+            not_deal_ips=$(echo ${deal_pool_result_str} | jq .${final_pool_key})
+            one_deal_ips=${not_deal_ips#*\"}
+            final_pool_ips=${one_deal_ips%\"*}
+#            echo ${final_pool_ips}
+            do_check ${final_pool_key} ${final_pool_ips} ${port} ${method} ${show_level}
+        fi
+    done
+}
+
+function check_pass(){
+    final_last_update_in_sec=$(expr ${final_last_update} / 1000)
+    final_date_str=$(date -r ${final_last_update_in_sec} +%Y-%m-%dT%H:%M:%S)
+    echo ""
+    echo "==================================================================================="
+    echo "total last update time is: "${final_date_str}
+    if [[ ${passCheck} = 0 ]]; then
+        echo "not pass check, at least one result's time is not the same of others, error domains:"
+        echo -e ${err_domains}
+    else
+        echo "pass check, all results' time are the same."
+    fi
+}
+
+jq_dir=$(which jq)
+if [[ ${jq_dir} = '' ]]; then
+    echo "jq is miss, you must install jq first!!! Please visit:"
+    echo "https://stedolan.github.io/jq/download/"
+    exit 0
+fi
+
+if [[ $# = 2 ]]; then
+    if [[ $1 = 'show' || $1 = 'refresh' ]]; then
+        if [[ $2 = '-d' || $2 = '-t' ]]; then
+            do_check_pool "message_flow_proc" "8090" $1 $2
+            do_check_pool "message_flow_web" "8080" $1 $2
+            check_pass
+        else
+            usage
+        fi
+    else
+        usage
+    fi
+elif [[ $# = 3 ]]; then
+    if [[ $1 = 'show' || $1 = 'refresh' ]]; then
+        if [[ $2 = '-d' || $2 = '-t' ]]; then
+            domain=$3
+            domain_arr=(${domain//:/ })
+            if [[ ${#domain_arr[@]} = 2 ]]; then
+                host=${domain_arr[0]}
+                port=${domain_arr[1]}
+                do_check_one ${host} ${port} $1 $2
+            else
+                usage
+            fi
+        else
+            usage
+        fi
+    else
+        usage
+    fi
+else
+    usage
+fi
