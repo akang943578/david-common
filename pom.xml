@@ -7,7 +7,7 @@
     <groupId>com.david.common</groupId>
     <artifactId>david-common</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <modules>
         <module>common-code</module>
         <module>global-limiter</module>
