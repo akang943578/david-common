@@ -36,6 +36,10 @@ git push -u origin master
     <version>${common.version}</version>
 </dependency>
 ```
+### 批量设置所有module的pom版本
+```
+mvn --batch-mode release:update-versions -DdevelopmentVersion=${common.version}
+```
 
 ### 注意：
 如果maven所使用的settings.xml里面配置了镜像服务器，并且mirrorOf为*，则一定将jiakang-maven-repo排除，否则将无法找到github仓库地址，下载不到依赖。
