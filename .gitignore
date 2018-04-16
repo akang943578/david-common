@@ -29,3 +29,4 @@ logs
 test-output
 .recommenders
 .DS_Store
+*.versionsBackup

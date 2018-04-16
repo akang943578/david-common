@@ -37,8 +37,19 @@ git push -u origin master
 </dependency>
 ```
 ### 批量设置所有module的pom版本
+为避免顶级pom和子pom版本变化时一个个修改，maven提供了下面的命令
+
+修改版本
 ```
-mvn --batch-mode release:update-versions -DdevelopmentVersion=${common.version}
+mvn versions:set -DnewVersion=xxx
+```
+回滚版本，提交后不能回滚
+```
+mvn versions:revert
+```
+提交版本变更
+```
+mvn versions:commit
 ```
 
 ### 注意：
