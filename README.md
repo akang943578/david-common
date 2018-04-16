@@ -44,6 +44,6 @@ git push -u origin master
 <dependency>
     <groupId>com.david.common</groupId>
     <artifactId>common-code</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>${common.version}</version>
 </dependency>
 ```
