@@ -1,6 +1,6 @@
 package com.david.common.util.test;
 
-import com.david.common.util.CommandExecutor;
+import com.david.common.util.Commands;
 import org.junit.Test;
 
 /**
@@ -8,7 +8,7 @@ import org.junit.Test;
  *
  * @author jiakang
  */
-public class CommandExecutorTest {
+public class CommandsTest {
 
     @Test
     public void testCommand() {
@@ -23,7 +23,7 @@ public class CommandExecutorTest {
 //		cmd = "ansible -i invent.txt all -a free";
 //        cmd = "df -h";
         cmd = "ffmpeg -i /home/fsdevops/workspace/fs-qixin-extension/fs-qixin-extension-common/audioFile/test.opus -vn -f mp3 -y /home/fsdevops/workspace/fs-qixin-extension/fs-qixin-extension-common/audioFile/test_java_cmd_tomp3.mp3";
-        String result = CommandExecutor.runCommand(cmd);
+        String result = Commands.execute(cmd);
 
         System.out.println("==========获得值=============");
         System.out.println(result);

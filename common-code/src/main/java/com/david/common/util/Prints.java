@@ -4,7 +4,10 @@ import org.apache.logging.log4j.message.ParameterizedMessage;
 
 /**
  * Created by jiakang on 2017/5/19.
- * 打印。用于打印相关的封装
+ *
+ * 打印。用于打印相关的封装，使用姿势如同log4j
+ *  Prints.println("person info, name:{}, age:{}", "Davie", 23);
+ * 输出：person info, name:David, age:13
  * @author jiakang
  */
 public class Prints {

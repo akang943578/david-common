@@ -12,9 +12,9 @@ import java.io.InputStreamReader;
  * Java调用命令行，并获取返回结果
  * @author jiakang
  */
-public class CommandExecutor {
+public class Commands {
 
-    public static String runCommand(String cmd) {
+    public static String execute(String cmd) {
         // /bin/sh -c: 如果-c 选项存在，命令就从字符串中读取。如果字符串后有参数，他们将会被分配到参数的位置上，从$0开始。
         String[] cmdA = {"/bin/sh", "-c", cmd};
         Process p;
