@@ -3,8 +3,9 @@ package com.david.common.util;
 import org.apache.logging.log4j.message.ParameterizedMessage;
 
 /**
- * 打印。用于打印相关的封装
  * Created by jiakang on 2017/5/19.
+ * 打印。用于打印相关的封装
+ * @author jiakang
  */
 public class Prints {
 

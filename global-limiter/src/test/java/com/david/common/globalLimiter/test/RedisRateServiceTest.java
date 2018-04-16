@@ -10,6 +10,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 
+/**
+ * Created by jiakang on 2018/4/16
+ *
+ * @author jiakang
+ */
 @Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:redis-rate-service-test.xml")

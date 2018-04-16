@@ -8,8 +8,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
- * Java调用命令行，并获取返回结果
  * Created by jiakang on 2018/4/15.
+ * Java调用命令行，并获取返回结果
+ * @author jiakang
  */
 public class CommandExecutor {
 

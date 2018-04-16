@@ -3,6 +3,11 @@ package com.david.common.util.test;
 import com.david.common.util.CommandExecutor;
 import org.junit.Test;
 
+/**
+ * Created by jiakang on 2018/4/16
+ *
+ * @author jiakang
+ */
 public class CommandExecutorTest {
 
     @Test

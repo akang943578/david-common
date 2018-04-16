@@ -11,5 +11,20 @@
 
     <artifactId>ext-tools</artifactId>
 
-
+    <build>
+        <plugins>
+            <!--   禁用打源码插件    -->
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <configuration>
+                    <attach>false</attach>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
