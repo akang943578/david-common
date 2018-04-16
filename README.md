@@ -2,25 +2,14 @@
 这是我的公共类库。公共类会提交到这里，供其他项目依赖。
 
 ### 使用方法：
-#### 更新项目：
-代码写好后，将其deploy到maven-repo项目里面。maven-repo项目push更新到github，项目重新依赖即可。
+#### 1.deploy到本地maven-repo项目
+代码写好后，将其deploy到maven-repo项目目录，/Users/jiakang/IdeaProjects/maven-repo/repository/。
 ```
 mvn clean deploy -DaltDeploymentRepository=jiakang-mvn-repo::default::file:/Users/jiakang/IdeaProjects/maven-repo/repository/ -Dmaven.test.skip=true
 ```
-#### 初次创建项目：
-简单来说，共有3步：
-```
-1.deploy到本地目录
-2.把本地目录提交到gtihub上
-3.配置github地址为仓库地址
-```
-##### 将其deploy到一个新项目目录下：
-```
-mvn clean deploy -DaltDeploymentRepository=jiakang-mvn-repo::default::file:/Users/jiakang/IdeaProjects/maven-repo/repository/ -Dmaven.test.skip=true
-```
-##### 把本地仓库提交到github上
-上面把项目deploy到本地目录/Users/jiakang/IdeaProjects/maven-repo/repository/里，下面把这个目录提交到github上。
-在Github上新建一个项目(maven-repo)，然后把/Users/jiakang/IdeaProjects/maven-repo/repository/下的文件都提交到gtihub上。
+#### 2.本地maven-repo项目push到github
+* 进入/Users/jiakang/IdeaProjects/maven-repo/，如果已经在github创建了maven-repo项目，直接add,commit,push即可。
+* 如果没有创建maven-repo项目，需要在Github上新建一个项目(maven-repo)，然后把/Users/jiakang/IdeaProjects/maven-repo/repository/下的文件都提交到gtihub上：
 ```
 cd /Users/jiakang/IdeaProjects/maven-repo/
 git init
@@ -29,7 +18,7 @@ git commit -m 'first commit'
 git remote add origin git@github.com:haojiakang/maven-repo.git
 git push -u origin master
 ```
-##### github maven仓库的使用
+#### 3.为需要的项目添加maven依赖
 因为github使用了raw.githubusercontent.com这个域名用于raw文件下载。所以使用这个maven仓库，只要在pom.xml里增加：
 ```
 <repositories>
@@ -47,3 +36,29 @@ git push -u origin master
     <version>${common.version}</version>
 </dependency>
 ```
+
+### 注意：
+如果maven所使用的settings.xml里面配置了镜像服务器，并且mirrorOf为*，则一定将jiakang-maven-repo排除，否则将无法找到github仓库地址，下载不到依赖。
+如果有如下配置：
+```
+ <mirrors>
+    <mirror>
+     <id>weibo</id>
+     <mirrorOf>*</mirrorOf>
+     <name>weibo maven nexus mirror</name>
+     <url>http://maven.intra.weibo.com/nexus/content/groups/public</url>
+   </mirror>
+ </mirrors>
+```
+一定将其改成：
+```
+ <mirrors>
+    <mirror>
+     <id>weibo</id>
+     <mirrorOf>*,!jiakang-maven-repo</mirrorOf>
+     <name>weibo maven nexus mirror</name>
+     <url>http://maven.intra.weibo.com/nexus/content/groups/public</url>
+   </mirror>
+ </mirrors>
+```
+注意改的是<mirrorOf>，切记！！！
