@@ -10,13 +10,13 @@ public class PrintsTest {
 
     @Test
     public void testPrint() {
-        System.out.println("print start");
         Prints.print("hello world");
+        Prints.print("hello, {}, I'm {}", "David", "Lily");
         Prints.println("I am David");
-        System.err.println("err start");
+        Prints.println("I am {}", "a dog");
         Prints.printErr("What's wrong?");
+        Prints.printErr("What's wrong, {}?", "David");
         Prints.printlnErr("Oh, I have no idea");
-        System.err.println("err end");
-        System.out.println("print end");
+        Prints.printlnErr("Oh, I want to find {}, he is {}", "Monkey", "superman");
     }
 }
