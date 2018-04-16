@@ -61,4 +61,4 @@ git push -u origin master
    </mirror>
  </mirrors>
 ```
-注意改的是<mirrorOf>，切记！！！
+注意改的是mirrorOf，切记！！！
