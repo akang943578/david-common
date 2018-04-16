@@ -34,9 +34,9 @@ public class Commands {
             Thread errorThread = new InputStreamThread(errorStream, errorBuilder);
 
             inputThread.start();
-//			inputThread.join();
+			inputThread.join();
             errorThread.start();
-//			errorThread.join();
+			errorThread.join();
 
             p.waitFor();
             p.destroy();
