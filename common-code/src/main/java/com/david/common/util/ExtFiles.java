@@ -53,12 +53,7 @@ public class ExtFiles {
     }
 
     public static void write(File file, String content) {
-        Charset charset = DEFAULT_CHARSET;
-        try {
-            Files.write(file.toPath(), content.getBytes(charset), StandardOpenOption.WRITE);
-        } catch (IOException e) {
-            log.warn("write error, file:{}, content:{}, charset:{}", file, content, charset, e);
-        }
+        write(file, content, DEFAULT_CHARSET);
     }
 
     public static void write(File file, String content, Charset charset) {
