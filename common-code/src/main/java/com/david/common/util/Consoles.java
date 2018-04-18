@@ -20,7 +20,7 @@ public class Consoles {
     private static final Logger out = new SimpleLogger(Consoles.class.getName(), Level.ALL, true, true, true, true,
             "yyyyMMdd HH:mm:ss.SSS", null, new PropertiesUtil(new Properties()), System.out);
 
-    public static void debug(String msg) {
+    public static void debug(Object msg) {
         out.debug(msg);
     }
 
@@ -28,7 +28,7 @@ public class Consoles {
         out.debug(format, params);
     }
 
-    public static void info(String msg) {
+    public static void info(Object msg) {
         out.info(msg);
     }
 
@@ -36,7 +36,7 @@ public class Consoles {
         out.info(format, params);
     }
 
-    public static void warn(String msg) {
+    public static void warn(Object msg) {
         out.warn(msg);
     }
 
@@ -44,7 +44,7 @@ public class Consoles {
         out.warn(format, params);
     }
 
-    public static void error(String msg) {
+    public static void error(Object msg) {
         out.error(msg);
     }
 

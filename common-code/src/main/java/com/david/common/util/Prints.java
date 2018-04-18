@@ -12,16 +12,16 @@ import org.apache.logging.log4j.message.ParameterizedMessage;
  */
 public class Prints {
 
-    public static void print(String str) {
-        System.out.print(str);
+    public static void print(Object msg) {
+        System.out.print(msg);
     }
 
     public static void print(String format, Object... params) {
         System.out.print(getFormattedMessage(format, params));
     }
 
-    public static void println(String str) {
-        System.out.println(str);
+    public static void println(Object msg) {
+        System.out.println(msg);
     }
 
     public static void println(String format, Object... params) {
@@ -29,16 +29,16 @@ public class Prints {
         System.out.println(resultMsg);
     }
 
-    public static void printErr(String str) {
-        System.err.print(str);
+    public static void printErr(Object msg) {
+        System.err.print(msg);
     }
 
     public static void printErr(String format, Object... params) {
         System.err.print(getFormattedMessage(format, params));
     }
 
-    public static void printlnErr(String str) {
-        System.err.println(str);
+    public static void printlnErr(Object msg) {
+        System.err.println(msg);
     }
 
     public static void printlnErr(String format, Object... params) {
